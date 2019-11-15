@@ -36,10 +36,10 @@ def add_verb(word, conjugation):
             return 'h'
 
     if verb['type'] == 'de-conj-strong':
-        verb['present_stem'] = conjugation['1']
+        verb['present_stem'] = get_default(conjugation, '1', '')
         verb['e_on_present_second_third'] = get_bool(conjugation, '5')
-        verb['past_stem'] = conjugation['2']
-        verb['past_participle'] = conjugation['3']
+        verb['past_stem'] = get_default(conjugation, '2', '')
+        verb['past_participle'] = get_default(conjugation, '3', '')
         verb['auxillary_verb'] = get_auxillary('4')
         verb['present_second_third_stem'] = get_default(conjugation, '6', verb['present_stem'])
         verb['conjunctive_ii_stem'] = get_default(conjugation, '7', verb['past_stem'])
@@ -52,7 +52,7 @@ def add_verb(word, conjugation):
         verb['present_second_ends_t'] = False
 
     if verb['type'] in ['de-conj-weak', 'de-conj-weak-ern', 'de-conj-weak-eln']:
-        verb['present_stem'] = conjugation['1']
+        verb['present_stem'] = get_default(conjugation, '1', '')
         verb['e_on_present_second_third'] = get_bool(conjugation, '4')
         verb['past_stem'] = verb['present_stem']
         if verb['e_on_present_second_third']:
@@ -71,7 +71,7 @@ def add_verb(word, conjugation):
         verb['present_second_ends_t'] = get_bool(conjugation, '5')
 
     if verb['type'] in ['de-conj-weak', 'de-conj-weak', 'de-conj-weak-ern', 'de-conj-weak-eln']:
-        VERBS.insert(verb)
+        VERBS.insert_ignore(verb, ['word'])
 
 def add_noun(word, conjugation):
     noun = {'word': word, 'type': conjugation['template_name']}
@@ -130,7 +130,7 @@ def add_noun(word, conjugation):
 
     if noun['type'] in ['de-decl-noun-m', 'de-decl-noun-f', 'de-decl-noun-n', 'de-decl-noun-pl',
                                  'de-decl-adj+noun-f', 'de-decl-adj+noun-m', 'de-decl-adj+noun-n']:
-        NOUNS.insert(noun)
+        NOUNS.insert_ignore(noun, ['word'])
 
 def add_adj(word, conjugation):
     adj = {'word': word, 'type': conjugation['template_name']}
@@ -139,9 +139,9 @@ def add_adj(word, conjugation):
     adj['strong_pred'] = get_bool(conjugation, 'strong_pred')
 
     if adj['type'] == 'de-decl-adj':
-        adj['stem'] = conjugation['1']
-        adj['comparative'] = conjugation['2']
-        adj['superlative'] = conjugation['3']
+        adj['stem'] = get_default(conjugation, '1', '')
+        adj['comparative'] = get_default(conjugation, '2', '')
+        adj['superlative'] = get_default(conjugation, '3', '')
         if 'pred' in conjugation:
             if conjugation['pred'] != '-':
                 adj['pred'] = conjugation['pred']
@@ -160,7 +160,7 @@ def add_adj(word, conjugation):
         adj['stem'] = get_default(conjugation, '1', adj['word'])
 
     if adj['type'] in ['de-decl-adj', 'de-decl-adj-notcomp', 'de-decl-adj-notcomp-nopred']:
-        ADJS.insert(adj)
+        ADJS.insert_ignore(adj, ['word'])
 
 def word_cb(data):
     if 'conjugation' in data:
