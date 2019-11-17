@@ -70,7 +70,7 @@ def add_verb(word, conjugation):
         verb['esset_stem_ending'] = False
         verb['present_second_ends_t'] = get_bool(conjugation, '5')
 
-    if verb['type'] in ['de-conj-weak', 'de-conj-weak', 'de-conj-weak-ern', 'de-conj-weak-eln']:
+    if verb['type'] in ['de-conj-strong', 'de-conj-weak', 'de-conj-weak-ern', 'de-conj-weak-eln']:
         VERBS.insert_ignore(verb, ['word'])
 
 def add_noun(word, conjugation):
