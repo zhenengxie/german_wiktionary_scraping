@@ -43,7 +43,7 @@ def add_verb(word, conjugation):
         verb['auxillary_verb'] = get_auxillary('4')
         verb['present_second_third_stem'] = get_default(conjugation, '6', verb['present_stem'])
         verb['conjunctive_ii_stem'] = get_default(conjugation, '7', verb['past_stem'])
-        verb['append_te_past_stem'] = get_bool(conjugation, '8')
+        verb['no_te_past_stem'] = get_bool(conjugation, '8')
         verb['no_e_imperative'] = get_bool(conjugation, '9')
         verb['seperable_prefix'] = get_default(conjugation, '10', '')
         verb['seperable_prefix_ii'] = ''
@@ -55,20 +55,29 @@ def add_verb(word, conjugation):
         verb['present_stem'] = get_default(conjugation, '1', '')
         verb['e_on_present_second_third'] = get_bool(conjugation, '4')
         verb['past_stem'] = verb['present_stem']
-        if verb['e_on_present_second_third']:
-            verb['past_participle'] = 'ge{0}et'.format(verb['present_stem'])
-        else:
-            verb['past_participle'] = 'ge{0}t'.format(verb['present_stem'])
         verb['auxillary_verb'] = get_auxillary('3')
         verb['present_second_third_stem'] = verb['present_stem']
         verb['conjunctive_ii_stem'] = verb['present_stem']
-        verb['append_te_past_stem'] = True
+        verb['no_te_past_stem'] = False
         verb['no_e_imperative'] = False
         verb['seperable_prefix'] = get_default(conjugation, '6', '')
         verb['seperable_prefix_ii'] = ''
         verb['imperative_uses_infinite_vowel'] = True
         verb['esset_stem_ending'] = False
         verb['present_second_ends_t'] = get_bool(conjugation, '5')
+        
+        if '2' in conjugation:
+            verb['past_participle'] = conjugation['2']
+        else:
+            if verb['type'] == 'de-conj-weak':
+                if verb['e_on_present_second_third']:
+                    verb['past_participle'] = 'ge{0}et'.format(verb['present_stem'])
+                else:
+                    verb['past_participle'] = 'ge{0}t'.format(verb['present_stem'])
+            if verb['type'] == 'de-conj-ern':
+                verb['past_participle'] = 'ge{0}ert'.format(verb['present_stem'])
+            if verb['type'] == 'de-conj-eln':
+                verb['past_participle'] = 'ge{0}elt'.format(verb['present_stem'])
 
     if verb['type'] in ['de-conj-strong', 'de-conj-weak', 'de-conj-weak-ern', 'de-conj-weak-eln']:
         VERBS.insert_ignore(verb, ['word'])
